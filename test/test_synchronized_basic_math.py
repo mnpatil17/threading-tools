@@ -1,5 +1,5 @@
 import unittest
-from synchronized_number import SynchronizedNumber
+from threading_tools import SynchronizedNumber
 
 NUM_TRIALS = 2500
 
