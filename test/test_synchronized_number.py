@@ -1,6 +1,7 @@
 import unittest
 import threading
 from synchronized_number import SynchronizedNumber
+from lock_acquisition_exception import LockAcquisitionException
 
 NUM_TRIALS = 2500
 
@@ -407,3 +408,66 @@ class TestSynchronizedNumber(unittest.TestCase):
 
             assert sync_num == 114.75, \
                 'Trial {0}: sync_num is {1} but must be 114.75'.format(i, sync_num)
+
+    def test_non_blocking_iadd(self):
+
+        def iadd_wrapper(sync_num):
+            try:
+                sync_num += 5.0
+                assert False, 'Exception was not thrown, but it should have been thrown'
+            except Exception as e:
+                assert isinstance(e, LockAcquisitionException), \
+                    'The exception should be a LockAcquisitionException. Instead was a {0}. {1}' \
+                    .format(type(e), e)
+
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(10.0, should_block_thread=False)
+
+            sync_num._lock.acquire()  # Acquire lock on main thread so others can't acquire it
+            thread = threading.Thread(target=iadd_wrapper, args=(sync_num, ))
+            thread.start()
+
+            thread.join()
+            sync_num._lock.release()
+
+    def test_non_blocking_imul(self):
+
+        def imul_wrapper(sync_num):
+            try:
+                sync_num *= 5.0
+                assert False, 'Exception was not thrown, but it should have been thrown'
+            except Exception as e:
+                assert isinstance(e, LockAcquisitionException), \
+                    'The exception should be a LockAcquisitionException. Instead was a {0}. {1}' \
+                    .format(type(e), e)
+
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(10.0, should_block_thread=False)
+
+            sync_num._lock.acquire()  # Acquire lock on main thread so others can't acquire it
+            thread = threading.Thread(target=imul_wrapper, args=(sync_num, ))
+            thread.start()
+
+            thread.join()
+            sync_num._lock.release()
+
+    def test_non_blocking_idiv(self):
+
+        def idiv_wrapper(sync_num):
+            try:
+                sync_num /= 5.0
+                assert False, 'Exception was not thrown, but it should have been thrown'
+            except Exception as e:
+                assert isinstance(e, LockAcquisitionException), \
+                    'The exception should be a LockAcquisitionException. Instead was a {0}. {1}' \
+                    .format(type(e), e)
+
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(10.0, should_block_thread=False)
+
+            sync_num._lock.acquire()  # Acquire lock on main thread so others can't acquire it
+            thread = threading.Thread(target=idiv_wrapper, args=(sync_num, ))
+            thread.start()
+
+            thread.join()
+            sync_num._lock.release()
