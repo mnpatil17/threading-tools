@@ -246,3 +246,164 @@ class TestSynchronizedNumber(unittest.TestCase):
         thread1.join()
 
         assert sync_num == 100, 'sync_num is {0} but must be 100'.format(sync_num)
+
+    def test_iadd_success(self):
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(0.0)
+
+            thread1_incr_amt = 50
+            thread2_incr_amt = 100
+
+            def incr_wrapper(sync_num, amt):
+                sync_num += amt
+
+            thread1 = threading.Thread(target=incr_wrapper, args=(sync_num, thread1_incr_amt, ))
+            thread2 = threading.Thread(target=incr_wrapper, args=(sync_num, thread2_incr_amt, ))
+
+            # Start the threads
+            thread1.start()
+            thread2.start()
+
+            # Wait on the threads
+            thread1.join()
+            thread2.join()
+
+            assert sync_num == 150, 'Trial {0}: sync_num is {1} but must be 150'.format(i, sync_num)
+
+    def test_isub_success(self):
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(150.0)
+
+            thread1_decr_amt = 50
+            thread2_decr_amt = 100
+
+            def decr_wrapper(sync_num, amt):
+                sync_num -= amt
+
+            thread1 = threading.Thread(target=decr_wrapper, args=(sync_num, thread1_decr_amt, ))
+            thread2 = threading.Thread(target=decr_wrapper, args=(sync_num, thread2_decr_amt, ))
+
+            # Start the threads
+            thread1.start()
+            thread2.start()
+
+            # Wait on the threads
+            thread1.join()
+            thread2.join()
+
+            assert sync_num == 0, 'Trial {0}: sync_num is {1} but must be 0'.format(i, sync_num)
+
+    def test_imul_success(self):
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(1.0)
+
+            thread1_mul_amt = 5
+            thread2_mul_amt = 10
+
+            def mul_wrapper(sync_num, amt):
+                sync_num *= amt
+
+            thread1 = threading.Thread(target=mul_wrapper, args=(sync_num, thread1_mul_amt, ))
+            thread2 = threading.Thread(target=mul_wrapper, args=(sync_num, thread2_mul_amt, ))
+
+            # Start the threads
+            thread1.start()
+            thread2.start()
+
+            # Wait on the threads
+            thread1.join()
+            thread2.join()
+
+            assert sync_num == 50, 'Trial {0}: sync_num is {1} but must be 50'.format(i, sync_num)
+
+    def test_idiv_success(self):
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(50.0)
+
+            thread1_div_amt = 7
+            thread2_div_amt = 10
+
+            def div_wrapper(sync_num, amt):
+                sync_num /= amt
+
+            thread1 = threading.Thread(target=div_wrapper, args=(sync_num, thread1_div_amt, ))
+            thread2 = threading.Thread(target=div_wrapper, args=(sync_num, thread2_div_amt, ))
+
+            # Start the threads
+            thread1.start()
+            thread2.start()
+
+            # Wait on the threads
+            thread1.join()
+            thread2.join()
+
+            assert round(sync_num.value, 4) == 0.7143, \
+                'Trial {0}: sync_num is {1} but must be 0.7143'.format(i, sync_num)
+
+    def test_idivide_if_satisfies_condition(self):
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(99.0)
+
+            thread1_idiv_amt = 1.5
+            thread2_idiv_amt = 1.5
+            thread3_idiv_amt = 1.5
+
+            def condition(x):
+                return 50 < x < 100
+
+            thread1 = threading.Thread(
+                target=sync_num.idivide_if_satisfies_condition,
+                args=(thread1_idiv_amt, condition))
+            thread2 = threading.Thread(
+                target=sync_num.idivide_if_satisfies_condition,
+                args=(thread2_idiv_amt, condition))
+            thread3 = threading.Thread(
+                target=sync_num.idivide_if_satisfies_condition,
+                args=(thread3_idiv_amt, condition))
+
+            # Start the threads
+            thread1.start()
+            thread2.start()
+            thread3.start()
+
+            # Wait on the threads
+            thread1.join()
+            thread2.join()
+            thread3.join()
+
+            assert sync_num == 44, \
+                'Trial {0}: sync_num is {1} but must be 44'.format(i, sync_num)
+
+    def test_imultiply_if_satisfies_condition(self):
+        for i in range(NUM_TRIALS):
+            sync_num = SynchronizedNumber(51.0)
+
+            thread1_imul_amt = 1.5
+            thread2_imul_amt = 1.5
+            thread3_imul_amt = 1.5
+
+            def condition(x):
+                return 50 < x < 100
+
+            thread1 = threading.Thread(
+                target=sync_num.imultiply_if_satisfies_condition,
+                args=(thread1_imul_amt, condition))
+            thread2 = threading.Thread(
+                target=sync_num.imultiply_if_satisfies_condition,
+                args=(thread2_imul_amt, condition))
+            thread3 = threading.Thread(
+                target=sync_num.imultiply_if_satisfies_condition,
+                args=(thread3_imul_amt, condition))
+
+            # Start the threads
+            thread1.start()
+            thread2.start()
+            thread3.start()
+
+            # Wait on the threads
+            thread1.join()
+            thread2.join()
+            thread3.join()
+
+            assert sync_num == 114.75, \
+                'Trial {0}: sync_num is {1} but must be 114.75'.format(i, sync_num)
