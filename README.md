@@ -1,9 +1,20 @@
 # Threading Tools
 [![Build Status](https://travis-ci.org/mnpatil17/threading-tools.svg?branch=master)](https://travis-ci.org/mnpatil17/threading-tools)
+[![Latest Version](https://img.shields.io/pypi/v/threading-tools.svg)](https://pypi.python.org/pypi/threading-tools/)
 
-## Installation
 
-Currently, this package isn't available on pip. Information about pip installation will be available shortly; please check back for more updates soon.
+### Installation
+
+This package uses pip for installation. You can find out more information about pip [here](https://pip.pypa.io/en/stable/quickstart/).
+
+Installation can be done directly through pip, using `pip install threading-tools`.
+
+If this doesn't work, or you prefer having the source code on your machine, you can also execute the
+following:
+
+1. `git clone https://github.com/mnpatil17/threading-tools.git`
+2. `cd negative_cycles`
+3. `pip install -e .`
 
 ## Usage
 
