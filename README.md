@@ -3,7 +3,7 @@
 [![Latest Version](https://img.shields.io/pypi/v/threading-tools.svg)](https://pypi.python.org/pypi/threading-tools/)
 
 
-### Installation
+## Installation
 
 This package uses pip for installation. You can find out more information about pip [here](https://pip.pypa.io/en/stable/quickstart/).
 
