@@ -177,3 +177,9 @@ The `idivide_if_satisfies_condition` method increments the value of the `Synchro
     False
     >>> sync_number
     5.0
+
+
+## Testing
+
+If you choose, you can clone this repository locally and run the tests yourself.
+To run tests, simply run `nosetests` from the `threading_tools/` directory.
