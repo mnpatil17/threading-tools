@@ -1,3 +1,3 @@
 from synchronized_number import SynchronizedNumber
 from lock_acquisition_exception import LockAcquisitionException
-from threading_decorators import threaded_fn
+from threading_decorators import threaded_fn, process_fn
