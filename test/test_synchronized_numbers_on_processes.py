@@ -41,8 +41,6 @@ class TestSynchronizedNumberOnProcesses(unittest.TestCase):
             process2 = multiprocessing.Process(
                 target=sync_num.decrement, args=(process2_decr_amt, ))
 
-            print "Starting"
-
             # Start the processes
             process1.start()
             process2.start()
@@ -50,9 +48,6 @@ class TestSynchronizedNumberOnProcesses(unittest.TestCase):
             # Wait on the processes
             process1.join()
             process2.join()
-
-            print "Joined"
-
 
             assert sync_num == 0, 'Trial {0}: sync_num is {1} but must be 0'.format(i, sync_num)
 
