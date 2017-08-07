@@ -4,6 +4,7 @@
 #
 
 import threading
+import multiprocessing
 from lock_acquisition_exception import LockAcquisitionException
 
 
@@ -12,11 +13,20 @@ class SynchronizedNumber:
     An implementation of a threadsafe, synchronized number in Python
     """
 
-    def __init__(self, initial_value, should_block_thread=True):
-        self.should_block_thread = should_block_thread
-        self._lock = threading.Lock()
-        self.value = 0
-        self.set_value(initial_value)
+    def __init__(self, initial_value, process_sync=False, block_thread_or_process=True):
+        """
+        :param: process_sync - True if synchronization across multiple processes is desired.
+                               False if synchronization across threads in one process is desired.
+        """
+        self._lock = multiprocessing.Lock() if process_sync else threading.Lock()
+
+        print type(self._lock)
+
+        self._lock.acquire()
+        self.process_sync = process_sync
+        self.block_thread_or_process = block_thread_or_process
+        self.value = initial_value
+        self._lock.release()
 
     def set_value(self, new_value):
         """
@@ -43,6 +53,7 @@ class SynchronizedNumber:
         :param: decr_value - The value to decremented by
         :return: True if value is decremented successfully, False if not.
         """
+        print "Decrementing"
         return self.increment(-decr_value)
 
     def increment_if_less_than(self, incr_value, limit, eq_ok=False):
@@ -152,15 +163,31 @@ class SynchronizedNumber:
 
         :return: True if value is multipled successfully, False if not.
         """
-        if self._lock.acquire(self.should_block_thread):
-            try:
-                if satisfaction_condition(self.value):
-                    self.value = operator(self.value)
-                    return True
-                else:
-                    return False
-            finally:
-                self._lock.release()
+
+        if self.process_sync:
+            if self._lock.acquire(block=self.block_thread_or_process):
+                print "Value-1: ", self.value
+                return self.operate_if_satisfies_condition_helper(operator, satisfaction_condition)
+        else:
+            if self._lock.acquire(self.block_thread_or_process):
+                return self.operate_if_satisfies_condition_helper(operator, satisfaction_condition)
+
+        return False
+
+    def operate_if_satisfies_condition_helper(self, operator, satisfaction_condition):
+        print "Value0: ", self.value
+
+        try:
+            if satisfaction_condition(self.value):
+                print "Operator: ", operator
+                print "Value1: ", self.value
+                self.value = operator(self.value)
+                print "Value2: ", self.value
+                return True
+            else:
+                return False
+        finally:
+            self._lock.release()
 
         return False
 

@@ -2,10 +2,10 @@ import unittest
 import threading
 from threading_tools import SynchronizedNumber, LockAcquisitionException
 
-NUM_TRIALS = 2500
+NUM_TRIALS = 50
 
 
-class TestSynchronizedNumber(unittest.TestCase):
+class TestSynchronizedNumberOnThreads(unittest.TestCase):
 
     def test_increment(self):
         for i in range(NUM_TRIALS):
@@ -420,7 +420,7 @@ class TestSynchronizedNumber(unittest.TestCase):
                     .format(type(e), e)
 
         for i in range(NUM_TRIALS):
-            sync_num = SynchronizedNumber(10.0, should_block_thread=False)
+            sync_num = SynchronizedNumber(10.0, block_thread_or_process=False)
 
             sync_num._lock.acquire()  # Acquire lock on main thread so others can't acquire it
             thread = threading.Thread(target=iadd_wrapper, args=(sync_num, ))
@@ -441,7 +441,7 @@ class TestSynchronizedNumber(unittest.TestCase):
                     .format(type(e), e)
 
         for i in range(NUM_TRIALS):
-            sync_num = SynchronizedNumber(10.0, should_block_thread=False)
+            sync_num = SynchronizedNumber(10.0, block_thread_or_process=False)
 
             sync_num._lock.acquire()  # Acquire lock on main thread so others can't acquire it
             thread = threading.Thread(target=imul_wrapper, args=(sync_num, ))
@@ -462,7 +462,7 @@ class TestSynchronizedNumber(unittest.TestCase):
                     .format(type(e), e)
 
         for i in range(NUM_TRIALS):
-            sync_num = SynchronizedNumber(10.0, should_block_thread=False)
+            sync_num = SynchronizedNumber(10.0, block_thread_or_process=False)
 
             sync_num._lock.acquire()  # Acquire lock on main thread so others can't acquire it
             thread = threading.Thread(target=idiv_wrapper, args=(sync_num, ))
