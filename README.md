@@ -13,7 +13,7 @@ If this doesn't work, or you prefer having the source code on your machine, you 
 following:
 
 1. `git clone https://github.com/mnpatil17/threading-tools.git`
-2. `cd negative_cycles`
+2. `cd threading_tools`
 3. `pip install -e .`
 
 ## Usage
